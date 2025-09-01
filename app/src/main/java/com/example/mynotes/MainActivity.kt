@@ -14,6 +14,7 @@ import com.example.mynotes.repository.NoteRepository
 import com.example.mynotes.viewmodel.NoteViewModel
 import com.example.mynotes.viewmodel.NoteViewModelFactory
 
+
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var noteViewModel: NoteViewModel
@@ -26,10 +27,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setUpViewModel() {
-        val noteRepository=NoteRepository(NoteDatabase(this))
-        val viewModelProviderFactory=NoteViewModelFactory(application,noteRepository)
+        val noteDatabase = NoteDatabase.getInstance(this) // 👈 much clearer
+        val noteRepository = NoteRepository(noteDatabase)
 
-        noteViewModel=ViewModelProvider(
-            this,viewModelProviderFactory).get(NoteViewModel::class.java)
+        val viewModelProviderFactory = NoteViewModelFactory(application, noteRepository)
+        noteViewModel = ViewModelProvider(this, viewModelProviderFactory)
+            .get(NoteViewModel::class.java)
     }
 }
